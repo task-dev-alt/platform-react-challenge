@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Select from "react-select";
 import { Button, Collapsible } from "../../components";
 import { BREED_CHARACTERISTICS } from "../constants";
@@ -22,10 +22,6 @@ const ratingOptions = [
 export const BreedFilters = ({ onFiltersChange }: BreedFiltersProps) => {
   const [filters, setFilters] = useState<FilterValues>({});
 
-  useEffect(() => {
-    onFiltersChange(filters);
-  }, [filters, onFiltersChange]);
-
   return (
     <Collapsible
       title="Filters"
@@ -45,16 +41,18 @@ export const BreedFilters = ({ onFiltersChange }: BreedFiltersProps) => {
               )}
               onChange={(option) => {
                 const newValue = option?.value;
-                setFilters((prev) => {
-                  const updatedFilters = {
-                    ...prev,
-                    [key]: newValue ? Number(newValue) : undefined,
-                  };
-                  if (updatedFilters[key] === undefined) {
-                    delete updatedFilters[key];
-                  }
-                  return updatedFilters;
-                });
+
+                const newFilters = {
+                  ...filters,
+                  [key]: newValue ? Number(newValue) : undefined,
+                };
+
+                if (newFilters[key] === undefined) {
+                  delete newFilters[key];
+                }
+
+                setFilters(newFilters);
+                onFiltersChange(newFilters);
               }}
               classNames={{
                 control: (state) =>
