@@ -1,21 +1,155 @@
-# GlobalWebIndex Engineering Challenge
+# Cat Gallery Application
 
-## Exercise: CatLover
+A modern React application for browsing cat breeds and managing favorite cats, built with TypeScript and React Query. The application showcases best practices in React development, accessibility, and state management.
 
-Create a React application for cat lovers which is going to build upon thecatapi.com and will have 3 views.
-The **first** view displays a list of 10 random cat images and a button to load more. Clicking on any of those images opens a modal view with the image and the information about the cat’s breed if available. This would be a link to the second view below - the breed detail. The modal should also contain a form to mark the image as your favourite (a part of the third view as well). Make sure you can copy-paste the URL of the modal and send it to your friends - they should see the same image as you can see.
+## 🐱 Features
 
-The **second** view displays a list of cat breeds. Each breed opens a modal again with a list of cat images of that breed. Each of those images must be a link to the image detail from the previous point.
+- **Cat Browser**
 
-The **third** view allows you do the following things:
+  - View a grid of cat images with infinite scroll
+  - Filter cats by breed
+  - Add/remove cats to favorites
+  - View detailed information about each cat
 
-- Display your favourite cats
-- Remove an image from your favourites (use any UX option you like)
+- **Breed Explorer**
 
-You can find the API documentation here: https://developers.thecatapi.com/
-We give you a lot of freedom in technologies and ways of doing things. We only insist on you using React.js. Get creative as much as you want, we WILL appreciate it. You will not be evaluated based on how well you follow these instructions, but based on how sensible your solution will be. In case you are not able to implement something you would normally implement for time reasons, make it clear with a comment.
+  - Search and filter cat breeds
+  - View detailed breed characteristics
+  - Interactive rating displays for breed attributes
+  - Wikipedia links for additional information
+  - View cats of specific breeds
 
-## Submission
+- **Favorites Management**
+  - Save favorite cats
+  - Remove cats from favorites
+  - Persistent storage of favorites
+  - Optimistic UI updates
 
-Once you have built your app, share your code in the mean suits you best
-Good luck, potential colleague!
+## Technical Stack
+
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **State Management**: React Query
+- **Routing**: React Router
+- **Components**: Custom component library
+
+## Project Structure
+
+```
+src/
+├── api/            # API integration layer
+├── app/            # Application core setup
+├── components/     # Reusable UI components
+└── features/       # Feature-based modules
+    ├── breeds/     # Breed-related features
+    └── cats/       # Cat-related features
+```
+
+### Key Components
+
+- `AsyncContainer`: Handles loading and error states
+- `Modal`: Reusable modal component with accessibility features
+- `Rating`: Visual representation of breed characteristics
+- `Collapsible`: Expandable/collapsible section component
+
+### Feature Modules
+
+#### Cats Module
+
+- `Cats.tsx`: Main cat browsing interface
+- `CatDetails.tsx`: Detailed cat information view
+- `CatGrid.tsx`: Grid layout for cat images
+- `FavouriteCats.tsx`: Favorites management
+
+#### Breeds Module
+
+- `Breeds.tsx`: Main breed browsing interface
+- `BreedDetails.tsx`: Detailed breed information
+- `BreedFilters.tsx`: Filtering interface for breeds
+
+## State Management
+
+- React Query for server state
+- Local state for UI interactions
+- Optimistic updates for favorites
+- Infinite scrolling implementation
+
+## API Integration
+
+The application integrates with [The Cat API](https://thecatapi.com/) for:
+
+- Fetching cat images
+- Managing favorites
+- Retrieving breed information
+- Filtering and searching functionality
+
+## Getting Started
+
+1. **Installation**
+
+   ```bash
+   npm install
+   ```
+
+2. **Development**
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Build**
+
+   ```bash
+   npm run build
+   ```
+
+4. **Testing (soon™️)**
+   ```bash
+   npm test
+   ```
+
+## Development Guidelines
+
+### Code Organization
+
+- Feature-based folder structure
+- Shared components in `components/`
+- API integration isolated in `api/`
+- Type definitions in feature modules
+
+### State Management Patterns
+
+- Use React Query for server state
+- Local state for UI-only state
+- Optimistic updates for better UX
+- proper TypeScript typing
+
+### Component Guidelines
+
+- Functional components with hooks
+- Props typing with TypeScript
+- Responsive design with Tailwind
+
+### Best Practices
+
+- TypeScript for type safety
+- Proper error handling
+- Loading state management
+- Responsive design
+
+## Performance Considerations
+
+- Image optimization
+- Infinite scrolling
+- Debounced search
+- Optimistic updates
+- Proper caching with React Query
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
