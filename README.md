@@ -1,13 +1,12 @@
 # Cat Gallery Application
 
-A modern React application for browsing cat breeds and managing favorite cats, built with TypeScript and React Query. The application showcases best practices in React development, accessibility, and state management.
+A modern React application for browsing cat breeds and managing favorite cats, built with TypeScript and React Query.
 
 ## 🐱 Features
 
 - **Cat Browser**
 
   - View a grid of cat images with infinite scroll
-  - Filter cats by breed
   - Add/remove cats to favorites
   - View detailed information about each cat
 
@@ -22,8 +21,6 @@ A modern React application for browsing cat breeds and managing favorite cats, b
 - **Favorites Management**
   - Save favorite cats
   - Remove cats from favorites
-  - Persistent storage of favorites
-  - Optimistic UI updates
 
 ## Technical Stack
 
@@ -72,7 +69,6 @@ src/
 
 - React Query for server state
 - Local state for UI interactions
-- Optimistic updates for favorites
 - Infinite scrolling implementation
 
 ## API Integration
@@ -82,7 +78,6 @@ The application integrates with [The Cat API](https://thecatapi.com/) for:
 - Fetching cat images
 - Managing favorites
 - Retrieving breed information
-- Filtering and searching functionality
 
 ## Getting Started
 
@@ -115,14 +110,13 @@ The application integrates with [The Cat API](https://thecatapi.com/) for:
 
 - Feature-based folder structure
 - Shared components in `components/`
-- API integration isolated in `api/`
 - Type definitions in feature modules
+- Simplicity focused
 
 ### State Management Patterns
 
 - Use React Query for server state
 - Local state for UI-only state
-- Optimistic updates for better UX
 - proper TypeScript typing
 
 ### Component Guidelines
@@ -140,16 +134,5 @@ The application integrates with [The Cat API](https://thecatapi.com/) for:
 
 ## Performance Considerations
 
-- Image optimization
 - Infinite scrolling
-- Debounced search
-- Optimistic updates
 - Proper caching with React Query
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
