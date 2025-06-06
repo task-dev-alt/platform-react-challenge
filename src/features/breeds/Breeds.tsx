@@ -14,8 +14,16 @@ import type { Breed } from "../types";
 
 const useBreedsState = () => {
   const { data: breeds, isError, isLoading } = useBreeds();
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeFilters, setActiveFilters] = useState<FilterValues>({});
+  const selectedBreedId = searchParams.get(BREED_PARAM);
+  const selectedCatId = searchParams.get(CAT_PARAM);
+
+  const [filters, setFilters] = useState<FilterValues>({});
+
+  const isModalOpen = !!selectedBreedId && !isLoading;
+  const showCatDetails = !!selectedCatId;
+  const selectedBreed = breeds?.find((breed) => breed.id === selectedBreedId);
 
   const breedOptions =
     breeds?.map((breed) => ({
@@ -23,19 +31,20 @@ const useBreedsState = () => {
       label: breed.name,
     })) ?? [];
 
-  const handleBreedSelect = (
-    option: SingleValue<(typeof breedOptions)[number]>
-  ) => {
-    if (option) {
-      handleBreedClick(option.value);
-    }
-  };
-
   const filteredBreeds = breeds?.filter((breed) => {
-    return Object.entries(activeFilters).every(
+    return Object.entries(filters).every(
       ([key, value]) => !value || Number(breed[key as keyof Breed]) >= value
     );
   });
+
+  const { data: cats } = useCats({
+    limit: 10,
+    breedId: searchParams.get(BREED_PARAM),
+  });
+
+  const selectedCat = cats?.pages
+    .flat()
+    .find((cat) => cat.id === selectedCatId);
 
   const handleBreedClick = (breedId: string) => {
     setSearchParams((prev) => {
@@ -55,54 +64,69 @@ const useBreedsState = () => {
     });
   };
 
-  const { data: cats } = useCats({
-    limit: 10,
-    breedId: searchParams.get(BREED_PARAM),
-  });
+  const handleBreedSelect = (
+    option: SingleValue<(typeof breedOptions)[number]>
+  ) => {
+    if (option) {
+      handleBreedClick(option.value);
+    }
+  };
 
-  const selectedCat = cats?.pages
-    .flat()
-    .find((cat) => cat.id === searchParams.get(CAT_PARAM));
+  const handleFilterChange = (
+    key: keyof FilterValues,
+    value: number | undefined
+  ) => {
+    setFilters((prev) => {
+      const newFilters = { ...prev };
+      if (value === undefined) {
+        delete newFilters[key];
+      } else {
+        newFilters[key] = value;
+      }
+      return newFilters;
+    });
+  };
 
-  const selectedBreed = breeds?.find(
-    (breed) => breed.id === searchParams.get(BREED_PARAM)
-  );
-
-  const isModalOpen = searchParams.has(BREED_PARAM) && !isLoading;
-  const showCatDetails = searchParams.has(CAT_PARAM);
+  const handleClearFilters = () => setFilters({});
 
   return {
     breeds,
     filteredBreeds,
+    selectedBreed,
+    selectedCat,
+    breedOptions,
+
     isError,
     isLoading,
-    selectedCat,
-    selectedBreed,
     isModalOpen,
     showCatDetails,
+    filters,
+
     handleBreedClick,
     handleCloseModal,
-    setActiveFilters,
-    breedOptions,
     handleBreedSelect,
+    handleFilterChange,
+    handleClearFilters,
   };
 };
 
 export const Breeds = () => {
   const {
-    filteredBreeds,
     breeds,
+    filteredBreeds,
+    selectedBreed,
+    selectedCat,
+    breedOptions,
     isError,
     isLoading,
-    selectedCat,
-    selectedBreed,
     isModalOpen,
     showCatDetails,
+    filters,
     handleBreedClick,
     handleCloseModal,
-    setActiveFilters,
-    breedOptions,
     handleBreedSelect,
+    handleFilterChange,
+    handleClearFilters,
   } = useBreedsState();
 
   return (
@@ -125,7 +149,11 @@ export const Breeds = () => {
               }`,
           }}
         />
-        <BreedFilters onFiltersChange={setActiveFilters} />
+        <BreedFilters
+          filters={filters}
+          onFiltersChange={handleFilterChange}
+          onClearFilters={handleClearFilters}
+        />
       </div>
 
       <AsyncContainer

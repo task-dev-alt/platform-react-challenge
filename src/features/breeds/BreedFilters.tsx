@@ -1,14 +1,9 @@
-import { useState } from "react";
 import Select from "react-select";
 import { Button, Collapsible } from "../../components";
 import { BREED_CHARACTERISTICS } from "../constants";
 import { capitalizeWords } from "../../utils";
 
 export type FilterValues = Record<string, number | undefined>;
-
-type BreedFiltersProps = {
-  onFiltersChange: (filters: FilterValues) => void;
-};
 
 const ratingOptions = [
   { value: "", label: "Any" },
@@ -19,9 +14,17 @@ const ratingOptions = [
   { value: "5", label: "5+" },
 ];
 
-export const BreedFilters = ({ onFiltersChange }: BreedFiltersProps) => {
-  const [filters, setFilters] = useState<FilterValues>({});
+type BreedFiltersProps = {
+  filters: FilterValues;
+  onFiltersChange: (key: keyof FilterValues, value: number | undefined) => void;
+  onClearFilters: () => void;
+};
 
+export const BreedFilters = ({
+  filters,
+  onFiltersChange,
+  onClearFilters,
+}: BreedFiltersProps) => {
   return (
     <Collapsible
       title="Filters"
@@ -40,19 +43,10 @@ export const BreedFilters = ({ onFiltersChange }: BreedFiltersProps) => {
                 (option) => option.value === String(filters[key] || "")
               )}
               onChange={(option) => {
-                const newValue = option?.value;
-
-                const newFilters = {
-                  ...filters,
-                  [key]: newValue ? Number(newValue) : undefined,
-                };
-
-                if (newFilters[key] === undefined) {
-                  delete newFilters[key];
-                }
-
-                setFilters(newFilters);
-                onFiltersChange(newFilters);
+                onFiltersChange(
+                  key,
+                  option?.value ? Number(option.value) : undefined
+                );
               }}
               classNames={{
                 control: (state) =>
@@ -71,7 +65,7 @@ export const BreedFilters = ({ onFiltersChange }: BreedFiltersProps) => {
 
       {Object.keys(filters).length > 0 && (
         <div className="flex justify-center mt-4">
-          <Button variant="secondary" onClick={() => setFilters({})}>
+          <Button variant="secondary" onClick={onClearFilters}>
             Clear all filters
           </Button>
         </div>
