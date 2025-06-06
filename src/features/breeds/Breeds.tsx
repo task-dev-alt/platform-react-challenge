@@ -1,16 +1,16 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import Select from "react-select";
+import { Modal, AsyncContainer } from "../../components";
 import { useCats } from "../cats/api";
 import { BREED_PARAM, CAT_PARAM } from "../constants";
+import { CatDetails } from "../cats";
+import { BreedFilters, type FilterValues } from "./BreedFilters";
+import { BreedDetails } from "./BreedDetails";
 import { useBreeds } from "./api";
 
 import type { SingleValue } from "react-select";
 import type { Breed } from "../types";
-import { BreedFilters, type FilterValues } from "./BreedFilters";
-import Select from "react-select";
-import { ErrorMessage, LoadingSpinner, Modal } from "../../components";
-import { CatDetails } from "../cats";
-import { BreedDetails } from "./BreedDetails";
 
 const useBreedsState = () => {
   const { data: breeds, isError, isLoading } = useBreeds();
@@ -128,38 +128,40 @@ export const Breeds = () => {
         <BreedFilters onFiltersChange={setActiveFilters} />
       </div>
 
-      {isLoading && <LoadingSpinner />}
-      {isError && (
-        <ErrorMessage message="🙀 Failed to fetch cats. Please reload." />
-      )}
-      {filteredBreeds && (
-        <>
-          <p className="mb-4 text-sm text-gray-600">
-            Showing {filteredBreeds.length} of {breeds?.length} breeds
-          </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {filteredBreeds.map((breed) => (
-              <div
-                key={breed.id}
-                onClick={() => handleBreedClick(breed.id)}
-                className="p-4 transition-colors duration-200 border rounded-lg cursor-pointer hover:bg-gray-50"
-              >
-                {breed.image && (
-                  <img
-                    src={breed.image.url}
-                    alt={breed.name}
-                    className="object-cover w-full h-48 mb-4 rounded"
-                  />
-                )}
-                <h2 className="text-xl font-semibold">{breed.name}</h2>
-                <p className="mt-2 text-gray-600 line-clamp-2">
-                  {breed.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      <AsyncContainer
+        isLoading={isLoading}
+        isError={isError}
+        errorMessage="🙀 Failed to fetch cats. Please reload."
+      >
+        {filteredBreeds && (
+          <>
+            <p className="mb-4 text-sm text-gray-600">
+              Showing {filteredBreeds.length} of {breeds?.length} breeds
+            </p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {filteredBreeds.map((breed) => (
+                <div
+                  key={breed.id}
+                  onClick={() => handleBreedClick(breed.id)}
+                  className="p-4 transition-colors duration-200 border rounded-lg cursor-pointer hover:bg-gray-50"
+                >
+                  {breed.image && (
+                    <img
+                      src={breed.image.url}
+                      alt={breed.name}
+                      className="object-cover w-full h-48 mb-4 rounded"
+                    />
+                  )}
+                  <h2 className="text-xl font-semibold">{breed.name}</h2>
+                  <p className="mt-2 text-gray-600 line-clamp-2">
+                    {breed.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </AsyncContainer>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="w-full">
